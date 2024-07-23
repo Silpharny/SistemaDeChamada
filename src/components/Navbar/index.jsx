@@ -27,7 +27,7 @@ export default function Navbar() {
         <FiUser color="#fff" size={24} />
         <p>Clientes</p>
       </Link>
-      <Link to="/dashboard">
+      <Link to="/profile">
         <FiSettings color="#fff" size={24} />
         <p>Perfil</p>
       </Link>
