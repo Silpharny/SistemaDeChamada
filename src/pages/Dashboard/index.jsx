@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../../contexts/auth";
 import Navbar from "../../components/Navbar";
 import Title from "../../components/Title";
+import Modal from "../../components/Modal";
 import { FiEdit2, FiMessageSquare, FiPlus, FiSearch } from "react-icons/fi";
 
 import "./styles.css";
@@ -14,13 +15,16 @@ import {
   query,
   startAfter,
 } from "firebase/firestore";
-import { db } from "../../services/firebaseConection";
 
+import { db } from "../../services/firebaseConection";
 import { format } from "date-fns";
 
 export default function Dashboard() {
   const [chamados, setChamados] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [modalDatails, setModalDatails] = useState();
 
   const [isEmpty, setIsEmpty] = useState(false);
 
@@ -96,6 +100,11 @@ export default function Dashboard() {
     await updateState(querySnapshot);
   }
 
+  function toggleModal(item) {
+    setIsOpenModal(!isOpenModal);
+    setModalDatails(item);
+  }
+
   if (loading) {
     return (
       <div>
@@ -169,6 +178,7 @@ export default function Dashboard() {
                         <td data-label="CadastradoEm">{item.createdFormat}</td>
                         <td data-label="#">
                           <button
+                            onClick={() => toggleModal(item)}
                             className="action"
                             style={{ backgroundColor: "#3583f3" }}
                           >
@@ -199,7 +209,12 @@ export default function Dashboard() {
           )}
         </>
       </div>
-      <button onClick={logoutUser}>Sair da conta</button>
+      {isOpenModal && (
+        <Modal
+          modalDatails={modalDatails}
+          closeModal={() => setIsOpenModal(!isOpenModal)}
+        />
+      )}
     </div>
   );
 }
